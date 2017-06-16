@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Dagobah Soundboard</string>
+    <string name="victory_button">Victory</string>
+    <string name="ambience_button">Ambience</string>
+    <string name="push_it_button">Push It</string>
+    <string name="kick_it_button">Kick It</string>
+    <string name="cantina_button">Cantina</string>
+    <string name="noooo_button">Noooo</string>
+    <string name="roar_button">Roar</string>
+    <string name="shame_button">Shame</string>
+</resources>
