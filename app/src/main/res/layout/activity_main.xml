@@ -7,18 +7,34 @@
     android:layout_height="match_parent"
     tools:context="com.andrewsking.dagobahsoundboard.MainActivity">
 
+    <ImageView
+        android:id="@+id/yoda"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/yoda"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/yoda"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <Button
             android:id="@+id/ambienceButton"
@@ -70,13 +86,14 @@
         android:layout_height="0dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="0dp"
         android:layout_weight="1"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        android:id="@+id/linearLayout3">
+        android:id="@+id/linearLayout3"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <Button
             android:id="@+id/nooooButton"
@@ -128,13 +145,14 @@
         android:layout_height="0dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="0dp"
         android:layout_weight="1"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-        android:id="@+id/linearLayout4">
+        android:id="@+id/linearLayout4"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <Button
             android:id="@+id/shameButton"
@@ -179,7 +197,9 @@
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <FrameLayout
             android:id="@+id/fragmentContainer"
