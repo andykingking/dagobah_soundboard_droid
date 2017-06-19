@@ -18,14 +18,13 @@ import java.util.Date;
 public class PlaySoundFragment extends Fragment implements MediaPlayer.OnCompletionListener  {
 
     public interface OnMediaCompletionListener {
-        public void onMediaCompletion();
+        void onMediaCompletion();
     }
 
     private static String SOUND_ID = "com.andrewsking.dagobahsoundboard.SOUND_ID";
 
     private MediaPlayer mediaPlayer;
     private int soundId;
-    private int duration;
     private Handler progressHandler = new Handler();
     private DateFormat formatter = new SimpleDateFormat("mm:ss");
     private static int PROGRESS_UPDATE_INTERVAL = 100;
@@ -82,7 +81,6 @@ public class PlaySoundFragment extends Fragment implements MediaPlayer.OnComplet
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        duration = 0;
         callback.onMediaCompletion();
     }
 
