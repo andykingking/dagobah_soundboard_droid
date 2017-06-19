@@ -1,75 +1,60 @@
 package com.andrewsking.dagobahsoundboard;
 
-import android.content.Intent;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-public class MainActivity extends AppCompatActivity implements PlaySoundFragment.OnMediaCompletionListener {
+public class MainActivity extends AppCompatActivity implements PlaySoundService.OnCompletionListener {
 
     private PlaySoundFragment fragment;
+
+    public void playAmbience(View view) {
+        fragment.playAmbience(view);
+    }
+
+    public void playCantina(View view) {
+        fragment.playCantina(view);
+    }
+
+    public void playKickIt(View view) {
+        fragment.playKickIt(view);
+    }
+
+    public void playNoooo(View view) {
+        fragment.playNoooo(view);
+    }
+
+    public void playPushIt(View view) {
+        fragment.playPushIt(view);
+    }
+
+    public void playRoar(View view) {
+        fragment.playRoar(view);
+    }
+
+    public void playShame(View view) {
+        fragment.playShame(view);
+    }
+
+    public void playVictory(View view) {
+        fragment.playVictory(view);
+    }
+
+    public void stop(View view) {
+        fragment.stop(view);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
-
-    public void playAmbience(View view) {
-        playSound(R.raw.ambience);
-    }
-
-    public void playCantina(View view) {
-        playSound(R.raw.cantina);
-    }
-
-    public void playKickIt(View view) {
-        playSound(R.raw.kick_it);
-    }
-
-    public void playNoooo(View view) {
-        playSound(R.raw.noooo);
-    }
-
-    public void playPushIt(View view) {
-        playSound(R.raw.push_it);
-    }
-
-    public void playRoar(View view) {
-        playSound(R.raw.roar);
-    }
-
-    public void playShame(View view) {
-        playSound(R.raw.shame);
-    }
-
-    public void playVictory(View view) {
-        playSound(R.raw.victory);
-    }
-
-    public void playSound(int soundId) {
-        if (fragment != null) {
-            removeFragment();
-        }
-        fragment = PlaySoundFragment.buildFragment(soundId);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragmentContainer, fragment)
-                .commit();
+        fragment = (PlaySoundFragment) getSupportFragmentManager().findFragmentById(R.id.playSoundFragment);
     }
 
     @Override
-    public void onMediaCompletion() {
-        removeFragment();
+    public void onCompletion() {
+        fragment.onCompletion();
     }
 
-    public void removeFragment() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .detach(fragment)
-                .commit();
-        fragment = null;
-    }
 }
