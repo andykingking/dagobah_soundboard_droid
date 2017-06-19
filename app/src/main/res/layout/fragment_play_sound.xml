@@ -207,17 +207,17 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="6dp"
+            android:layout_gravity="center_vertical"
             android:text="00:00"
-            android:textSize="30sp"/>
+            android:textSize="30dp"/>
 
         <TextView
             android:id="@+id/dividerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_gravity="center_vertical"
             android:text="/"
-            android:textSize="30sp"/>
+            android:textSize="30dp"/>
 
         <TextView
             android:id="@+id/durationTextView"
@@ -225,14 +225,15 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="6dp"
+            android:layout_gravity="center_vertical"
             android:text="00:00"
-            android:textSize="30sp"/>
+            android:textSize="30dp"/>
 
         <Button
             android:id="@+id/stopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:onClick="stop"
             android:text="Stop" />
 
