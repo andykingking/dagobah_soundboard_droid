@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/topButtonLayout"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginLeft="16dp"
@@ -89,8 +89,8 @@
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        android:id="@+id/linearLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/topButtonLayout"
+        android:id="@+id/middleButtonLayout"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp">
 
@@ -148,8 +148,8 @@
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-        android:id="@+id/linearLayout4"
+        app:layout_constraintTop_toBottomOf="@+id/middleButtonLayout"
+        android:id="@+id/bottomButtonLayout"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp">
 
@@ -186,7 +186,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/playDetailsLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -196,7 +196,7 @@
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        app:layout_constraintTop_toBottomOf="@+id/bottomButtonLayout"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:visibility="invisible" >

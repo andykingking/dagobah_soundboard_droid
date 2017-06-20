@@ -22,12 +22,9 @@ import java.util.Date;
 
 public class PlaySoundFragment extends Fragment {
 
-    private Handler progressHandler = new Handler();
-    private DateFormat formatter = new SimpleDateFormat("mm:ss");
-    private static int PROGRESS_UPDATE_INTERVAL = 100;
-//    private TextView durationView;
-//    private TextView progressView;
-
+    private static final Handler progressHandler = new Handler();
+    private static final DateFormat formatter = new SimpleDateFormat("mm:ss");
+    private static final int PROGRESS_UPDATE_INTERVAL = 100;
     private boolean serviceBound = false;
     private PlaySoundService mediaPlayerService;
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -42,6 +39,7 @@ public class PlaySoundFragment extends Fragment {
             PlaySoundService.ServiceBinder binder = (PlaySoundService.ServiceBinder) service;
             mediaPlayerService = binder.getService();
             mediaPlayerService.setOnCompletionListener(getActivity());
+            if (mediaPlayerService.isPlaying()) preparePlayDetails();
             serviceBound = true;
         }
     };
@@ -89,10 +87,13 @@ public class PlaySoundFragment extends Fragment {
 
     private void playSound(int soundId) {
         mediaPlayerService.playSound(soundId);
+        preparePlayDetails();
+    }
+
+    private void preparePlayDetails() {
         setDateForId(mediaPlayerService.getDuration(), R.id.durationTextView);
-        View playingDetails = getView().findViewById(R.id.linearLayout);
-        playingDetails.setVisibility(View.VISIBLE);
-        progressHandler.postDelayed(updateProgress, PROGRESS_UPDATE_INTERVAL);
+        setPlayDetailsTo(View.VISIBLE);
+        progressHandler.post(updateProgress);
     }
 
     public void stop(View view) {
@@ -112,7 +113,6 @@ public class PlaySoundFragment extends Fragment {
         Intent intent = new Intent(parentActivity, PlaySoundService.class);
         parentActivity.startService(intent);
         parentActivity.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
     }
 
     @Override
@@ -126,11 +126,15 @@ public class PlaySoundFragment extends Fragment {
     }
 
     public void onCompletion() {
-        View playingDetails = getView().findViewById(R.id.linearLayout);
-        playingDetails.setVisibility(View.INVISIBLE);
+        setPlayDetailsTo(View.INVISIBLE);
         setDateForId(0, R.id.durationTextView);
         setDateForId(0, R.id.progressTextView);
         progressHandler.removeCallbacks(updateProgress);
+    }
+
+    private void setPlayDetailsTo(int visibility) {
+        View playingDetails = getView().findViewById(R.id.playDetailsLayout);
+        playingDetails.setVisibility(visibility);
     }
 
     private void setDateForId(int milliseconds, int viewId) {

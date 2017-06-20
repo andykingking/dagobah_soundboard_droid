@@ -8,4 +8,5 @@
     <string name="noooo_button">Noooo</string>
     <string name="roar_button">Roar</string>
     <string name="shame_button">Shame</string>
+    <string name="notification_title">Playing</string>
 </resources>

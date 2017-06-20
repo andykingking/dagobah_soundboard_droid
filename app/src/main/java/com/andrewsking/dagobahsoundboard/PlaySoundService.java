@@ -1,16 +1,17 @@
 package com.andrewsking.dagobahsoundboard;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
-import android.view.View;
 
 public class PlaySoundService extends Service implements MediaPlayer.OnCompletionListener {
 
-    public static String SOUND_ID = "com.andrewsking.dagobahsoundboard.SOUND_ID";
+    private static final int ONGOING_NOTIFICATION_ID = 1;
 
     public interface OnCompletionListener {
         void onCompletion();
@@ -40,6 +41,7 @@ public class PlaySoundService extends Service implements MediaPlayer.OnCompletio
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+        stopForeground(true);
         onCompletionListenerContext.onCompletion();
     }
 
@@ -48,6 +50,19 @@ public class PlaySoundService extends Service implements MediaPlayer.OnCompletio
         mediaPlayer = MediaPlayer.create(this, soundId);
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.start();
+        Notification notification = buildPlayingNotification();
+        startForeground(ONGOING_NOTIFICATION_ID, notification);
+    }
+
+    private Notification buildPlayingNotification() {
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        return new Notification.Builder(this)
+                .setContentTitle(getText(R.string.notification_title))
+                .setSmallIcon(R.drawable.yoda_icon)
+                .setContentIntent(pendingIntent)
+                .build();
     }
 
     public void setOnCompletionListener(Context context) {
@@ -65,6 +80,10 @@ public class PlaySoundService extends Service implements MediaPlayer.OnCompletio
     public void stop() {
         onCompletionListenerContext.onCompletion();
         cleanupPlayer();
+    }
+
+    public boolean isPlaying() {
+        return mediaPlayer != null && mediaPlayer.isPlaying();
     }
 
     @Override
