@@ -12,6 +12,7 @@ import android.os.IBinder;
 public class PlaySoundService extends Service implements MediaPlayer.OnCompletionListener {
 
     private static final int ONGOING_NOTIFICATION_ID = 1;
+    private Sound currentSound;
 
     public interface OnCompletionListener {
         void onCompletion();
@@ -24,7 +25,6 @@ public class PlaySoundService extends Service implements MediaPlayer.OnCompletio
     }
 
     private MediaPlayer mediaPlayer;
-    private int soundId;
     private IBinder binder = new ServiceBinder();
     private OnCompletionListener onCompletionListenerContext;
 
@@ -37,17 +37,20 @@ public class PlaySoundService extends Service implements MediaPlayer.OnCompletio
         if (mediaPlayer.isPlaying()) mediaPlayer.stop();
         mediaPlayer.release();
         mediaPlayer = null;
+        stopForeground(true);
+        currentSound.setPlaying(false);
     }
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        stopForeground(true);
-        onCompletionListenerContext.onCompletion();
+        stop();
     }
 
-    public void playSound(int soundId) {
+    public void playSound(Sound sound) {
         if (mediaPlayer != null) cleanupPlayer();
-        mediaPlayer = MediaPlayer.create(this, soundId);
+        this.currentSound = sound;
+        currentSound.setPlaying(true);
+        mediaPlayer = MediaPlayer.create(this, currentSound.getSoundId());
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.start();
         Notification notification = buildPlayingNotification();
@@ -78,8 +81,8 @@ public class PlaySoundService extends Service implements MediaPlayer.OnCompletio
     }
 
     public void stop() {
-        onCompletionListenerContext.onCompletion();
         cleanupPlayer();
+        onCompletionListenerContext.onCompletion();
     }
 
     public boolean isPlaying() {

@@ -1,5 +1,6 @@
 package com.andrewsking.dagobahsoundboard;
 
+import android.animation.ObjectAnimator;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,10 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Date;
@@ -22,11 +27,15 @@ import java.util.Date;
 
 public class PlaySoundFragment extends Fragment {
 
+    // @TODO: Move functional stuff to Activity, leaving only UI elements
+
     private static final Handler progressHandler = new Handler();
     private static final DateFormat formatter = new SimpleDateFormat("mm:ss");
-    private static final int PROGRESS_UPDATE_INTERVAL = 100;
+    private static final int PROGRESS_UPDATE_INTERVAL = 50;
     private boolean serviceBound = false;
     private PlaySoundService mediaPlayerService;
+    private ListView soundListView;
+    private ProgressBar progressBar;
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -47,51 +56,23 @@ public class PlaySoundFragment extends Fragment {
         @Override
         public void run() {
             if (mediaPlayerService != null) {
-                setDateForId(mediaPlayerService.getCurrentPosition(), R.id.progressTextView);
+                ObjectAnimator animator = ObjectAnimator.ofInt(progressBar, "progress", progressBar.getProgress(), mediaPlayerService.getCurrentPosition());
+                animator.setDuration(PROGRESS_UPDATE_INTERVAL);
+                animator.setInterpolator(new LinearInterpolator());
+                animator.start();
                 progressHandler.postDelayed(this, PROGRESS_UPDATE_INTERVAL);
             }
         }
     };
+    private SoundArrayAdapter adapter;
 
-    public void playAmbience(View view) {
-        playSound(R.raw.ambience);
-    }
-
-    public void playCantina(View view) {
-        playSound(R.raw.cantina);
-    }
-
-    public void playKickIt(View view) {
-        playSound(R.raw.kick_it);
-    }
-
-    public void playNoooo(View view) {
-        playSound(R.raw.noooo);
-    }
-
-    public void playPushIt(View view) {
-        playSound(R.raw.push_it);
-    }
-
-    public void playRoar(View view) {
-        playSound(R.raw.roar);
-    }
-
-    public void playShame(View view) {
-        playSound(R.raw.shame);
-    }
-
-    public void playVictory(View view) {
-        playSound(R.raw.victory);
-    }
-
-    private void playSound(int soundId) {
-        mediaPlayerService.playSound(soundId);
+    private void playSound(Sound sound) {
+        mediaPlayerService.playSound(sound);
         preparePlayDetails();
     }
 
     private void preparePlayDetails() {
-        setDateForId(mediaPlayerService.getDuration(), R.id.durationTextView);
+        progressBar.setMax(mediaPlayerService.getDuration());
         setPlayDetailsTo(View.VISIBLE);
         progressHandler.post(updateProgress);
     }
@@ -104,6 +85,24 @@ public class PlaySoundFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_play_sound, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        adapter = new SoundArrayAdapter(getActivity());
+        soundListView = (ListView) getActivity().findViewById(R.id.soundListView);
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+        soundListView.setAdapter(adapter);
+        soundListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                final Sound item = (Sound) parent.getItemAtPosition(position);
+                playSound(item);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -127,19 +126,12 @@ public class PlaySoundFragment extends Fragment {
 
     public void onCompletion() {
         setPlayDetailsTo(View.INVISIBLE);
-        setDateForId(0, R.id.durationTextView);
-        setDateForId(0, R.id.progressTextView);
         progressHandler.removeCallbacks(updateProgress);
+        adapter.notifyDataSetChanged();
     }
 
     private void setPlayDetailsTo(int visibility) {
         View playingDetails = getView().findViewById(R.id.playDetailsLayout);
         playingDetails.setVisibility(visibility);
-    }
-
-    private void setDateForId(int milliseconds, int viewId) {
-        TextView textView = (TextView) getView().findViewById(viewId);
-        Date date = new Date(milliseconds);
-        textView.setText(formatter.format(date));
     }
 }
