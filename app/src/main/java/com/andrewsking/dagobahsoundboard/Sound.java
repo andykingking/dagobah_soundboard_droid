@@ -15,4 +15,5 @@ public class Sound {
     public int getSoundId() { return soundId; }
     public void setPlaying(boolean playing) { this.playing = playing; }
     public boolean isPlaying() { return playing; }
+    public String toString() { return displayName; }
 }
