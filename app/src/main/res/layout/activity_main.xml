@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.andrewsking.dagobahsoundboard.MainActivity">
+    tools:context="com.andrewsking.dagobahsoundboard.ui_controllers.MainActivity">
     
     <fragment
-        android:name="com.andrewsking.dagobahsoundboard.PlaySoundFragment"
+        android:name="com.andrewsking.dagobahsoundboard.ui_controllers.PlaySoundFragment"
         android:id="@+id/playSoundFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

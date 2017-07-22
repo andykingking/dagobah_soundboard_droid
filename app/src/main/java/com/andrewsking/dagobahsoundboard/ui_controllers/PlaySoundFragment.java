@@ -1,7 +1,10 @@
-package com.andrewsking.dagobahsoundboard;
+package com.andrewsking.dagobahsoundboard.ui_controllers;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +12,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,16 +21,22 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.andrewsking.dagobahsoundboard.PlaySoundService;
+import com.andrewsking.dagobahsoundboard.R;
+import com.andrewsking.dagobahsoundboard.Sound;
+import com.andrewsking.dagobahsoundboard.SoundArrayAdapter;
+import com.andrewsking.dagobahsoundboard.repositories.SoundRepository;
+import com.andrewsking.dagobahsoundboard.view_models.SoundViewModel;
 
-public class PlaySoundFragment extends Fragment implements SoundStore.OnChangeListener {
 
-    // @TODO: Move functional stuff to Activity, leaving only UI elements
+public class PlaySoundFragment extends LifecycleFragment {
 
     private static final Handler progressHandler = new Handler();
     private static final int PROGRESS_UPDATE_INTERVAL = 50;
     private boolean serviceBound = false;
     private PlaySoundService mediaPlayerService;
     private ListView soundListView;
+    private SoundViewModel viewModel;
     private ProgressBar progressBar;
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -84,14 +92,17 @@ public class PlaySoundFragment extends Fragment implements SoundStore.OnChangeLi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        this.viewModel = ViewModelProviders.of(this).get(SoundViewModel.class);
+
         Activity parentActivity = getActivity();
-        SoundStore.getInstance(parentActivity).setOnChangeListener(this);
-        adapter = new SoundArrayAdapter(parentActivity);
-        soundListView = (ListView) parentActivity.findViewById(R.id.soundListView);
-        progressBar = (ProgressBar) parentActivity.findViewById(R.id.progressBar);
-        progressBar = (ProgressBar) parentActivity.findViewById(R.id.progressBar);
-        soundListView.setAdapter(adapter);
-        soundListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        LiveData<Sound[]> soundData = this.viewModel.getSounds();
+        this.adapter = new SoundArrayAdapter(parentActivity, this, soundData);
+
+        this.soundListView = (ListView) parentActivity.findViewById(R.id.soundListView);
+        this.progressBar = (ProgressBar) parentActivity.findViewById(R.id.progressBar);
+        this.soundListView.setAdapter(this.adapter);
+        this.soundListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 playSound(position);
@@ -126,10 +137,5 @@ public class PlaySoundFragment extends Fragment implements SoundStore.OnChangeLi
     private void setPlayDetailsTo(int visibility) {
         View playingDetails = getView().findViewById(R.id.playDetailsLayout);
         playingDetails.setVisibility(visibility);
-    }
-
-    @Override
-    public void onChange() {
-        adapter.notifyDataSetChanged();
     }
 }

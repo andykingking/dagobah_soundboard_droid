@@ -1,9 +1,11 @@
-package com.andrewsking.dagobahsoundboard;
+package com.andrewsking.dagobahsoundboard.ui_controllers;
 
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import com.andrewsking.dagobahsoundboard.PlaySoundService;
+import com.andrewsking.dagobahsoundboard.R;
 
 public class MainActivity extends AppCompatActivity implements PlaySoundService.OnCompletionListener {
 

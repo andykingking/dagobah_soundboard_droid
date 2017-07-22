@@ -9,17 +9,20 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 
+import com.andrewsking.dagobahsoundboard.repositories.SoundRepository;
+import com.andrewsking.dagobahsoundboard.ui_controllers.MainActivity;
+
 public class PlaySoundService extends Service implements MediaPlayer.OnCompletionListener {
 
     private static final int ONGOING_NOTIFICATION_ID = 1;
-    private SoundStore soundStore;
+    private SoundRepository soundRepository = SoundRepository.getInstance();
 
     public interface OnCompletionListener {
         void onCompletion();
     }
 
     public class ServiceBinder extends Binder {
-        PlaySoundService getService() {
+        public PlaySoundService getService() {
             return PlaySoundService.this;
         }
     }
@@ -33,17 +36,12 @@ public class PlaySoundService extends Service implements MediaPlayer.OnCompletio
         return binder;
     }
 
-    @Override
-    public void onCreate() {
-        soundStore = SoundStore.getInstance(this);
-    }
-
     private void cleanupPlayer() {
         if (mediaPlayer.isPlaying()) mediaPlayer.stop();
         mediaPlayer.release();
         mediaPlayer = null;
         stopForeground(true);
-        soundStore.stopSound();
+        soundRepository.stopSound();
     }
 
     @Override
@@ -53,8 +51,8 @@ public class PlaySoundService extends Service implements MediaPlayer.OnCompletio
 
     public void playSound(int soundIndex) {
         if (mediaPlayer != null) cleanupPlayer();
-        soundStore.setSoundToPlaying(soundIndex);
-        mediaPlayer = MediaPlayer.create(this, soundStore.getPlayingSoundId());
+        soundRepository.setSoundToPlaying(soundIndex);
+        mediaPlayer = MediaPlayer.create(this, soundRepository.getPlayingSoundId());
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.start();
         Notification notification = buildPlayingNotification();
