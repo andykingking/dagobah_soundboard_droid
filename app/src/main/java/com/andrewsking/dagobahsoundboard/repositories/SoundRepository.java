@@ -25,11 +25,15 @@ public class SoundRepository {
 
     public static SoundRepository getInstance() {
         if (soundRepository == null) soundRepository = new SoundRepository();
+        soundRepository.initialize();
         return soundRepository;
     }
 
-    public LiveData<Sound[]> getSounds() {
+    private void initialize() {
         data.setValue(sounds);
+    }
+
+    public LiveData<Sound[]> getSounds() {
         return data;
     }
 
