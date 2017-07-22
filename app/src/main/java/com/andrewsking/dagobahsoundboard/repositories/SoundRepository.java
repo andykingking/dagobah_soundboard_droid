@@ -3,24 +3,14 @@ package com.andrewsking.dagobahsoundboard.repositories;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
-import com.andrewsking.dagobahsoundboard.R;
 import com.andrewsking.dagobahsoundboard.Sound;
+import com.andrewsking.dagobahsoundboard.data_sources.DefaultSounds;
 
 public class SoundRepository {
     private static SoundRepository soundRepository;
 
     private Integer currentSoundIndex;
-    private Sound[] sounds = new Sound[] {
-            new Sound(R.raw.ambience, "Ambience"),
-            new Sound(R.raw.cantina, "Cantina"),
-            new Sound(R.raw.kick_it, "Kick It"),
-            new Sound(R.raw.noooo, "Noooo"),
-            new Sound(R.raw.push_it, "Push It"),
-            new Sound(R.raw.rejoice, "Rejoice"),
-            new Sound(R.raw.roar, "Roar"),
-            new Sound(R.raw.shame, "Shame"),
-            new Sound(R.raw.victory, "Victory")
-    };
+    private Sound[] sounds;
     final private MutableLiveData<Sound[]> data = new MutableLiveData<Sound[]>();
 
     public static SoundRepository getInstance() {
@@ -30,6 +20,7 @@ public class SoundRepository {
     }
 
     private void initialize() {
+        this.sounds = DefaultSounds.getSounds();
         data.setValue(sounds);
     }
 
